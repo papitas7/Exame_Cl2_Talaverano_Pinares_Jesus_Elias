@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mantenimiento de Películas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f7fa;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      background-color: #6c757d;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      border-radius: 50px;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      border: none;
+      border-radius: 50px;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .btn-warning {
+      background-color: #ffc107;
+      border: none;
+      border-radius: 50px;
+    }
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+    .modal-header {
+      background-color: #343a40;
+      color: white;
+    }
+    .modal-footer .btn {
+      border-radius: 50px;
+    }
+    .table-hover tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+    .table-dark th {
+      background-color: #343a40;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+
+  <div class="mb-4 text-center">
+    <h3 class="display-5 text-dark">Mantenimiento de Películas</h3>
+  </div>
+
+  <div class="mb-4 d-flex justify-content-end">
+    <a href="/maintenance/add" class="btn btn-primary btn-lg">
+      <i class="bi bi-film"></i> Agregar Film
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="m-0">Todas las Películas</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark">
+            <tr>
+              <th>Código</th>
+              <th>Título</th>
+              <th>Idioma</th>
+              <th>Tiempo de alquiler</th>
+              <th>Precio de alquiler</th>
+              <th colspan="2" class="text-center">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="film : ${films}">
+              <td>
+                <a th:href="@{/maintenance/detail/{id}(id=${film.filmId()})}" th:text="${film.filmId()}" class="text-decoration-none text-info fw-bold"></a>
+              </td>
+              <td th:text="${film.title()}"></td>
+              <td th:text="${film.language()}"></td>
+              <td th:text="${film.rentalDuration()}"></td>
+              <td th:text="${film.rentalRate()}"></td>
+              <td class="text-center">
+                <!-- Botón para editar -->
+                <a th:href="@{/maintenance/edit/{id}(id=${film.filmId()})}" class="btn btn-warning btn-sm">
+                  <i class="bi bi-pencil-square"></i> Editar
+                </a>
+              </td>
+              <td class="text-center">
+
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                        th:data-bs-target="'#deleteModal_' + ${film.filmId()}">
+                  <i class="bi bi-trash-fill"></i> Eliminar
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div th:each="film : ${films}"
+       th:id="'deleteModal_' + ${film.filmId()}"
+       class="modal fade" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirmación de Eliminación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro de que deseas eliminar la película <b th:text="${film.title()}"></b>?
+        </div>
+        <div class="modal-footer">
+
+          <a th:href="@{/maintenance/delete/{id}(id=${film.filmId()})}" class="btn btn-danger">
+            Confirmar
+          </a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
